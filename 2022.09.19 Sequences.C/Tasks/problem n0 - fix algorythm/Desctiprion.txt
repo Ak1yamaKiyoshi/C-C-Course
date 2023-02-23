@@ -1,0 +1,13 @@
+
+#include <stdio.h>
+
+int main()
+{
+    int x, flag=0, sum=0;
+    do {
+        scanf("%d", &x);
+        if (!flag && x == 0) continue;
+        sum += x;
+    } while (x != 0 && !flag);
+    return 0;
+}
