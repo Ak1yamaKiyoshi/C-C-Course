@@ -73,8 +73,10 @@ nNode* allocateNode(int value, nNode *prev, nNode *next) {
  * @return void
 */
 void unlinkMiddleNode(nNode *a, nNode *b, nNode *c) {
-    a->next = c;
-    c->prev = a;
+    if (a !=NULL)
+        a->next = c;
+    if (c != NULL) 
+        c->prev = a;
     b->next = NULL;
     b->prev = NULL;
 }
@@ -89,7 +91,9 @@ void unlinkMiddleNode(nNode *a, nNode *b, nNode *c) {
  * @return void
 */
 void link(nNode *a, nNode *b, nNode *c) {
-    a->next = b;
+    if (a) {
+        a->next = b;
+    }
     b->prev = a;
     b->next = c;
     if (c != NULL)
@@ -114,7 +118,7 @@ nNode* moveLast(nNode *list) {
  * @return pointer on first element
 */
 nNode* moveFirst(nNode *list) {
-    while (list && list->prev) list = list->prev;
+    while (list != NULL && list->prev) list = list->prev;
     return list;
 }
 
@@ -246,9 +250,12 @@ int* listToArray(nNode *list) {
     int len = length(list);
     int *array = (int*)calloc(sizeof(int), len);
 
+   
+
     nNode *tmp = list;
-    for (int i = 0; i < len; i++, tmp = tmp->next)
+    for (int i = 0; i < len; i++, tmp = tmp->next){
         array[i] = tmp->value;
+    }
 
     return array;
 }
@@ -260,16 +267,17 @@ int* listToArray(nNode *list) {
  * @return *array - array with list values from begin index to end index (lenght of array end-begin)
 */ 
 int* slice(nNode* list, int begin, int end) {
-    list = moveFirst(list);
+    list = moveToIndex(list, begin);
     int len = length(list);
-    int *array = (int*)calloc(sizeof(int), end-begin);
+    if (begin > -1 && end < len) {
+        int *array = (int*)calloc(sizeof(int), end-begin);
+ 
+        nNode *tmp = list;
+        for (int i = 0; i < end-begin; i++, tmp = tmp->next)
+                array[i] = tmp->value;
 
-    nNode *tmp = list;
-    for (int i = 0; i < len; i++, tmp = tmp->next)
-        if (i >= begin && i <= end)
-            array[i-begin] = tmp->value;
-
-    return array;
+        return array;
+    }
 }
 
 
@@ -280,7 +288,7 @@ int* slice(nNode* list, int begin, int end) {
 */
 void reverse(nNode *list) {
     list = moveFirst(list);
-    for (int i=0, j=length(list)-1; i != j; i++) 
+    for (int i=0, j=length(list)-1; i <= j; i++) 
         swap(list, i, j);
 }
 
@@ -316,7 +324,7 @@ int insertFirst(nNode *list, int value) {
         if (newNode) 
             link(newNode, list, list->next); 
         else return 1;
-    } else return 1;
+    } else list = allocateNode(value, NULL, NULL);
     return 0;
 }
 
@@ -329,12 +337,12 @@ int insertFirst(nNode *list, int value) {
 */
 int insertLast(nNode *list, int value) {
     list = moveLast(list);
-    if (list) {
+    if (list != NULL) {
         nNode *newNode = allocateNode(value, NULL, NULL);
         if (newNode) 
             link(list->prev, list, newNode); 
         else return 1;
-    } else return 1;
+    } else list= allocateNode(value, NULL, NULL);
     return 0;
 }
 
@@ -347,9 +355,8 @@ int insertLast(nNode *list, int value) {
  * @return 0 if inserted succesfully or 1 if not   
 */
 int insertLastFromArray(nNode *list, int *array, int len) {
-    list = moveFirst(list);
     for (int i = 0; i < len; i++) 
-        if (insertLast(list, array[i])) return 1;
+        insertLast(list, array[i]);
     return 0;
 }
 
@@ -362,7 +369,6 @@ int insertLastFromArray(nNode *list, int *array, int len) {
  * @return 0 if inserted succesfully or 1 if not   
 */
 int insertFirstFromArray(nNode *list, int *array, int len) {
-    list = moveFirst(list);
     for (int i = 0; i < len; i++) 
         if (insertFirst(list, array[i])) return 1;
     return 0;
@@ -418,8 +424,8 @@ int delete(nNode* list, int index) {
         nNode* tmp2 = list->next;
         unlinkMiddleNode(tmp1, list, tmp2);
         free(list);
-        list = (tmp1) ? tmp1 : tmp2;
-    } else return 1;   
+        list = (tmp1 != NULL) ? tmp1 : tmp2;
+    } else return 1;
     return 0;
 }
 
@@ -461,11 +467,10 @@ int popFirst (nNode* list) {
     list = moveFirst(list);
     if (list) {
         int value = list->value;
-        nNode* tmp1 = list->prev;
         nNode* tmp2 = list->next;
-        unlinkMiddleNode(tmp1, list, tmp2);
         free(list);
-        list = (tmp1) ? tmp1 : tmp2;
+        tmp2->prev = NULL;
+        list = tmp2;
         return value;
     } else return NULL;
 }
@@ -480,12 +485,12 @@ int popLast (nNode* list) {
     if (list) {
         int value = list->value;
         nNode* tmp1 = list->prev;
-        nNode* tmp2 = list->next;
-        unlinkMiddleNode(tmp1, list, tmp2);
         free(list);
-        list = (tmp1) ? tmp1 : tmp2;
+        tmp1->next = NULL;
+        list = tmp1->prev;
         return value;
     } else return NULL;
+
 }
 
 
@@ -494,6 +499,8 @@ int popLast (nNode* list) {
  * @param *list - list to clear
 */
 nNode* clear(nNode* list) {
+    if (list != NULL) {
+
     list = moveFirst(list);
     nNode* tmp = list;
     while (list != NULL) {
@@ -501,7 +508,8 @@ nNode* clear(nNode* list) {
         free(list);
         list = tmp;
     }
-    return list;
+    }
+    return NULL;
 }
 
 
@@ -592,29 +600,113 @@ int main() {
     printf("\n  insert last 100 \n  * print: ");
     print(list);
     /* expected output: 100 3 100 2 1 100*/
+    
+    printf("\n PopFirst %d \n  * print: ", popFirst(list));
+    print(list);
+    /* expected output: 3 100 2 1 100*/
+
+    printf("\n popFirst %d \n  * print: ", popFirst(list));
+    print(list);
+    /* expected output: 100 2 1 100 */
+
+    printf("\n popFirst %d \n  * print: ", popFirst(list));
+    print(list);
+    /* expected output: 2 1 100 */
+
+    insertFirst(list, 3);
+    printf("\n insertFirst 3 \n  * print: ");
+    print(list);
+    /* expected output: 3 2 1 100 */
+
+    bubbleSort(list);
+    printf("\n Sorted \n  * print: ");
+    print(list);
+    /* expected output: 1 2 3 100 */
+
+    list = removeFirst(list, 3);
+    printf("\n removedFirst 3 \n  * print: ");
+    print(list);
+    /* expected output: 1 2 100 */
+
+    list = removeFirst(list, 100);
+    printf("\n removedFirst 100 \n  * print: ");
+    print(list);
+    /* expected output: 1 2 */
+
+    delete(list, 1);
+    printf("\n deleted at index 1 \n  * print: ");
+    print(list);
+    /* expected output: 1 */
+
+    insertFirst(list, 3);
+    printf("\n insertFirst 3 \n  * print: ");
+    print(list);
+    /* expected output: 3 1 */
+
+    int *array = listToArray(list);
+    printf("\n list to array \n  * array print: ");
+    for (int i = 0; i < length(list); i++)
+        printf("%d ", array[i]);
+    /* expected output: 3 1 */
+
+    insertFirstFromArray(list, array, 2);
+    printf("\n insertFirstFromArray 3 1 \n  * print: ");
+    print(list);
+    /* expected output: 3 1 3 1*/
+    
+    insertLastFromArray(list, array, 2);
+    printf("\n insertLastFromArray 3 1 \n  * print: ");
+    print(list);
+    /* expected output: 1 3 3 1 3 1*/
+
+    free(array);
+    printf("\n sliced from list 1, 3 \n  * array print: ");
+    array = slice(list, 1, 3);
+    for (int i = 0; i < 2; i++)
+        printf("%d ", array[i]);
+    /* expected output: 3 1 */
+    free(array);
 
 
-    /*
+    list = clear(list);
+    int array1[] = {1, 2, 3, 4, 5, 6}; // 6 
+    
+    list = allocateNode(0, NULL, NULL);
+    insertLastFromArray(list, array1, 6);
+    printf("\n insertLastFromArray 1, 2, 3, 4, 5, 6 \n  * print: ");
+    print(list);
+    /* expected output: 1 2 3 4 5 6*/
+
+    
     reverse(list);
     printf("\n Reverse List \n  * print: ");
     print(list);
+    
+    /* expected output: */ 
+
+    /*
+    printf("\n PopLast %d \n  * print: ", popLast(list));
+    print(list);
     */
-    /* expected output: 3 2 1 */ 
+    /* expected output: 3 100  */
+    /*
+    printf("\n PopLast %d \n  * print: ", popLast(list));
+    print(list);
+    */
+    /* expected output: 3  */
+
+    
+    
 
 
     return 0;
 }
 
-int*    listToArray(nNode *list);                                /* */
-int*    slice(nNode* list, int begin, int end);                  /* */
+/* TODO some problems with insert first/ last when pointer is null*/
+/* TODO Insert should return nNode */
 void    reverse(nNode *list);                                    /* NOT WORKING PROPERLY */
-int     insertLastFromArray(nNode *list, int *array, int len);   /* */ 
-int     insertFirstFromArray(nNode *list, int *array, int len);  /* */ 
 int     mergeLists(nNode *list, nNode *list2);                   /* */ 
 nNode*  insertList(nNode *list, nNode *list2, int index);        /* */ 
-int     delete(nNode* list, int index);                          /* */       
-nNode * removeFirst(nNode *list, int value);                     /* */
-int     popFirst (nNode* list);                                  /* */
-int     popLast (nNode* list);                                   /* */
-nNode*  clear(nNode* list);                                      /* */
-int     bubbleSort(nNode *list);                                 /* */
+int     delete(nNode* list, int index);                          /* DELETE AT INDEX 0 */       
+nNode * removeFirst(nNode *list, int value);                     /* TODO: TEST AT INDEX 0 AND LAST*/
+int     popLast (nNode* list);                                   /* NOT WORKING PROPERLY */
