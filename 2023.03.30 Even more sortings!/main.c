@@ -77,53 +77,26 @@ void countingSort(int *array, int len) {
             array[k++] = i;
 }
 
-void countingSortModified(int *array, int len, int slice) {
-    int counters[] = {0, 0, 0, 0, 0, 0, 0, 0, 0, 0};
-    int ouput[] =    {0, 0, 0, 0, 0, 0, 0, 0, 0, 0};
-    for (int i = 0; i < len; i++) counters[array[i]%slice]++;
-    int k = 0; 
-    
-    for (int i = 0; i < len; i++) {
-        int index = array[i] / slice % 10;
-        counters[index]++;
-    }
-    for (int i = 1; i < 10; i++) 
-            counters[i] += counters[i-1];
-
-    for (int i = len-1; i >= 0; i--) {
-        int index = array[i] / slice % 10;
-        ouput[counters[index]-1] = array[i];
-        counters[index]--;
-    }
-    for (int i = 0; i < len; i++) {
-        array[i] = ouput[i];
-    }
-}
-
 void bogoSort(int *array, int len) {
     while (verifyArray(array, len)) 
         shuffle(array, len);
 }
 
-void radixSort(int *array, int len) {
-    int maximum = max(array, len);
-    int slice = 1; /* slice array to a buckets */
-    while (verifyArray(array, len)) {
-        countingSortModified(array, len, slice);
-        slice *= 10;
-    }
+void countingSortMod(int *array, int len, int slice) {
+    int count[] = {0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0};
+    int *out = (int*)calloc(len, sizeof(int));
+    for (int i = 0; i < len; i++) count[array[i] / slice % 10]++;
+    for (int i = 1; i < 10; i++) count[i] += count[i-1];
+    for (int i = len-1; i > -1; i--) out[--count[array[i] / slice % 10]] = array[i];
+    for (int i = 0; i < len; i++ ) array[i] = out[i];
+    free(out);
 }
 
-/*
-def radix_sort(array):
-    slce = 1  # slice
-    maxNum = max(array)
-    while maxNum // slce >= 1:
-        counting_sort(array, slce)
-        slce *= 10
-    return array
-*/
-
+void radixSort(int *array, int len) {
+    int slice = 1;
+    for (int m = max(array, len); m/slice >= 1; slice *= 10)
+        countingSortMod(array, len, slice);
+} 
 
 int main() {
     srand(time(NULL));
@@ -131,7 +104,7 @@ int main() {
     int *array = (int*)calloc(sizeof(int), len);
     
     printf("\n filled : \n");
-    fill(array, len, len+1);
+    fill(array, len, 320);
     print(array, len);
 
     printf("\n sorted : \n");
@@ -139,12 +112,12 @@ int main() {
     //quick_sort(array, 0, len-1);
     //countingSort(array, len);
     //radixSort(array, len);
-    countingSortModified(array, len, 10);
+    //countingSortMod(array, len, 1);
+
+    radixSort(array, len);
     print(array, len);
 
-
     free(array);
-    
 
     return 0; 
 }
