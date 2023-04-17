@@ -95,33 +95,21 @@ struct node* searchPostOrder(struct node* tree, int value ) {
 }
 
 
-/*
-* Removes node with exact value
-* @param {value} value to search
-*/
-struct node* remove(struct node* tree, int value) {
-    struct node* ptr = searchPostOrder(tree, value);
-    if (!ptr) return NULL;
-    
-    if (ptr->left && ptr->right) {// Both childs
-        struct node* pointer = ptr.right; // check right subtree
-        while (pointer->left) {
-            struct node* prevPointer = pointer;
-            pointer = pointer->left; 
-        }
-        ptr->value = pointer->value; // reassign smallest value to current node
-        prevPointer->left = NULL;
-        free(pointer);
-    }
-    else if (ptr->left || ptr->right) { // One child
-        //let atr = (ptr.right) ? "right" : "left";
-        else {
-            ptr.parent[parentCheck(ptr)] = ptr[atr] // parent.ptr = ptr.avaivable node
-            ptr[atr].parent = ptr.parent
-        }
-    }
-    else // Leaf Node
-        ptr.parent[parentCheck(ptr)] = undefined; // remove link to leaf node 
+/* min(tree, NULL) */
+struct node* min(struct node* tree, struct node* minTree) {
+    if (tree) {
+        struct node* buf1 = min(tree->left, minTree);
+        struct node* buf2 = min(tree->right, minTree);
+        
+        if (buf1 != NULL)
+            buf1 = (buf1->value < buf2->value) ? buf1 : buf2;
+        if (buf1 != NULL)
+            buf1 = (buf1->value < minTree->value) ? buf1 : minTree;
+        
+            return (buf1->value < tree->value) ? buf1 : tree;
+        
+    } else 
+        return minTree;
 }
 
 
@@ -177,7 +165,7 @@ void fancyPrint(struct node* tree, int space) {
 
 int main() {
     struct node* tree = NULL;
-    int array[] = {0, 1, 2, 3, 4, 5, 6, 7, 8, 9, 10, 11, 12, 13, 14, 15, 16, 17, 18, 19, 20, 21, 22, 23};
+    int array[] = {0, 1, 2, 3, 4, 5, 6, 7, 8, -100, 9, 10, 11, 12, 13, -90, 14, 15, 16, 17, 18, 19, 20, 21, 22, 23, -2000, -900, -400};
     tree = insertFromArray(tree, array, 24);
 
     if (tree != NULL) {
@@ -188,8 +176,9 @@ int main() {
         printf("\ntree in order traversal:   "); printInOrder(tree);
         printf("\ntree post order traversal: "); printPostOrder(tree);
         printf("\nnode with value 3 [post order search]: %d", searchPostOrder(tree, 3)->value);
+        printf("\nminimum of the tree: %d\n", min(tree, NULL)->value);
     } else printf(" tree is NULL");
-
+    
 
     return 0;
 }
