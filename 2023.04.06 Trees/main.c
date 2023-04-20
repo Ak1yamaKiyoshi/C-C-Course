@@ -95,22 +95,64 @@ struct node* searchPostOrder(struct node* tree, int value ) {
 }
 
 
-/* min(tree, NULL) */
-struct node* min(struct node* tree, struct node* minTree) {
-    if (tree) {
-        struct node* buf1 = min(tree->left, minTree);
-        struct node* buf2 = min(tree->right, minTree);
-        
-        if (buf1 != NULL)
-            buf1 = (buf1->value < buf2->value) ? buf1 : buf2;
-        if (buf1 != NULL)
-            buf1 = (buf1->value < minTree->value) ? buf1 : minTree;
-        
-            return (buf1->value < tree->value) ? buf1 : tree;
+/*
+ * find node with minimal value in tree
+ * @param tree to search in 
+ * @return minNode node with min value 
+*/
+struct node* min(struct node* tree) {
+    if (tree != NULL) {
+
+        struct node *minNode = tree;
+        struct node *buffer = min(tree->left);
+        if (buffer != NULL && minNode->value > buffer->value) minNode = buffer; 
+        buffer = min(tree->right);
+        if (buffer != NULL && minNode->value > buffer->value) minNode = buffer;
+        return minNode;
+
+    } else 
+    return tree;
+}
+
+
+/*
+ * find parent of given node 
+ * @param tree search parent of givent nodeToFind in that tree
+ * @param nodeToFind parent of that node will be found if exists
+ * @return tree parent of nodeToFInd
+*/
+struct node* findParentOfNode(struct node* tree, struct node* nodeToFind) {
+    if (tree != NULL) {
+        if (tree->left == nodeToFind || tree->right == nodeToFind)  
+            return tree;
+        struct node *buffer = findParentOfNode(tree->left, nodeToFind);
+    if (buffer != NULL && (buffer->left == nodeToFind||buffer->right == nodeToFind)) return buffer;
+        buffer = findParentOfNode(tree->right, nodeToFind);
+    if (buffer != NULL && (buffer->left == nodeToFind||buffer->right == nodeToFind)) return buffer;
         
     } else 
-        return minTree;
+    return tree;
 }
+
+
+
+struct node* remove(struct node* tree, int value) {
+    struct node* nodePtr = searchPostOrder(tree, value);
+    if (nodePtr == tree || (tree->left && tree->right)) {
+        struct node* minNode = min(nodePtr->left);
+        tree = min(nodePtr->right); /* at this point, we don't need a tree pointer, so use it as buffer variable */
+        if (tree->value < minNode->value) minNode = tree;
+
+    
+        struct node* parentPtr = (minBuf[0]->value < minBuf[1]->value) 
+        ? findParentOfNode(tree, minBuf[0]) : findParentOfNode(tree, minBuf[1]);
+        
+        nodePtr->value = (minBuf[0]->value < minBuf[1]->value) ? minBuf[0] : minBuf[1];
+
+    }
+
+}
+
 
 
 /* 
@@ -166,7 +208,7 @@ void fancyPrint(struct node* tree, int space) {
 int main() {
     struct node* tree = NULL;
     int array[] = {0, 1, 2, 3, 4, 5, 6, 7, 8, -100, 9, 10, 11, 12, 13, -90, 14, 15, 16, 17, 18, 19, 20, 21, 22, 23, -2000, -900, -400};
-    tree = insertFromArray(tree, array, 24);
+    tree = insertFromArray(tree, array, 29);
 
     if (tree != NULL) {
         printf("Tree print: ");
@@ -176,8 +218,11 @@ int main() {
         printf("\ntree in order traversal:   "); printInOrder(tree);
         printf("\ntree post order traversal: "); printPostOrder(tree);
         printf("\nnode with value 3 [post order search]: %d", searchPostOrder(tree, 3)->value);
-        printf("\nminimum of the tree: %d\n", min(tree, NULL)->value);
-    } else printf(" tree is NULL");
+        printf("\nminimum of the tree: %d\n", min(tree)->value);
+        printf("\n parent of min value: %d", findParentOfNode(tree, min(tree))->value);
+    } 
+    else printf
+    (" tree is NULL");
     
 
     return 0;
