@@ -1,5 +1,5 @@
-Ігор Колосов, [24.04.2023 21:04]
- #include <malloc.h>
+
+#include <malloc.h>
 #include <stdio.h>
 #include <strings.h>
 
@@ -151,34 +151,48 @@ struct node *findParentOfNode(struct node *tree, struct node *nodeToFind) {
     return tree;
 }
 
+/*
+ * remove lass node by given value from tree
+ * @param tree tree to remove node from
+ * @param value value of node to remove
+ * @return tree - pointer to tree  
+ * TODO: delete from root
+*/
 struct node *removeLast(struct node *tree, int value) {
+  // 1. find node with given value 
   struct node *nodePtr = searchPostOrder(tree, value);
-  /* Two child case */
-  /* find node with minimum value in (left/right)subtree  of left and right
-   * subtree */
+
+  // 2. find minimum value of it's subtrees 
   struct node *minNode = min(nodePtr->left);
   struct node *bufferNode = min(nodePtr->right);
-  /* assign node with minimum value in (left/right)subtree to to minNode
-   * variable*/
-  minNode = (minNode->value < bufferNode->value) ? minNode : bufferNode;
-  /* find parent of minimum node to delete  minimum node from tree */
+
+  // 3. assign minimum value to minNode 
+  if ( minNode != NULL && bufferNode != NULL) 
+    minNode = (minNode->value < bufferNode->value) ? minNode : bufferNode;
+  else if (minNode == NULL && bufferNode != NULL)
+    minNode = bufferNode;
+  else if ( minNode == NULL && bufferNode == NULL)
+    minNode = nodePtr; 
+  
+  // 4.find parent of minNode
   if (minNode != NULL)
     bufferNode = findParentOfNode(tree, minNode);
-  else
-    bufferNode = findParentOfNode(tree, nodePtr);
-  /* asign node with value to delete value of node with
-   * minimum value in subtrees */
-  nodePtr->value = minNode->value;
-  /* free and delete node with minimum value */
+
+  // 5. assign value of minimum node to current node 
+  if ( nodePtr != minNode )
+    nodePtr->value = minNode->value;
+
+  // 6. free and delete pointer to buffer node ( can be current node or can be minimum node in subtrees of current node )
   if (bufferNode != NULL && bufferNode->left == minNode) {
     free(bufferNode->left);
     bufferNode->left = NULL;
-  } else if (bufferNode != NULL) {
+  } 
+  else if (bufferNode != NULL) {
     free(bufferNode->right);
     bufferNode->right = NULL;
   }
+
   return tree;
-  /* One child case */
 }
 
 /*
@@ -236,36 +250,72 @@ void fancyPrint(struct node *tree, int space) {
   fancyPrint(tree->left, space);
 }
 
-int main() {
-  struct node *tree = NULL;
+/*
+ * calculate max sum of node values path to leaf node in tree 
+ * @param tree tree to calculate path in 
+ * @return max sum of node values path to leaf node in tree 
+*/
+int calculateMaxTreePath(struct node* tree) {
+  if (tree == NULL) return 0;
+  int left = calculateMaxTreePath(tree->left);
+  int right = calculateMaxTreePath(tree->right);
+  return tree->value + ((left > right) ? left : right);
+}
+
+void testInsert() {
+struct node *tree = NULL;
   int array[] = {0,  1,  2,  3,  4,  5,   6,     7,    8,   -100,
                  9,  10, 11, 12, 13, -90, 14,    15,   16,  17,
                  18, 19, 20, 21, 22, 23,  -2000, -900, -400};
   tree = insertFromArray(tree, array, 28);
 
-  if (tree != NULL) {
-    printf("Tree print: ");
-    fancyPrint(tree, 1);
-    printf("\nTree traverses print: ");
-    printf("\ntree pre order traversal:  ");
-    printPreOrder(tree);
-    printf("\ntree in order traversal:   ");
-    printInOrder(tree);
-    printf("\ntree post order traversal: ");
-    printPostOrder(tree);
-    printf("\n node with value 3 [post order search]: %d",
-           searchPostOrder(tree, 3)->value);
-    printf("\nminimum of the tree: %d\n", min(tree)->value);
-    printf("\n parent of min value: %d",
-           findParentOfNode(tree, min(tree))->value);
-  } else
-    printf(" tree is NULL");
-
-
-  removeLast(tree, 0);
-  removeLast(tree, 12);
   printf("Tree print: ");
   fancyPrint(tree, 1);
+  printf("\nTree traverses print: ");
+  printf("\ntree pre order traversal:  ");
+  printPreOrder(tree);
+  printf("\ntree in order traversal:   ");
+  printInOrder(tree);
+  printf("\ntree post order traversal: ");
+  printPostOrder(tree);
+  printf("\n node with value 3 [post order search]: %d",
+  searchPostOrder(tree, 3)->value);
+  printf("\nminimum of the tree: %d\n", min(tree)->value);
+  printf("\n parent of min value: %d",
+  findParentOfNode(tree, min(tree))->value);
+}
+
+void testRemove() {
+struct node *tree = NULL;
+  int array[] = {1, 2, 3, 4, 5, 6};
+  tree = insertFromArray(tree, array, 6); 
+
+  // two child case
+  removeLast(tree, 3); 
+  // one child case
+  removeLast(tree, 4);
+  // terminal node case 
+  removeLast(tree, 5);
+  // root case 
+  // removeLast(tree, 1);
+
+  printf("Tree print: ");
+  fancyPrint(tree, 1);
+}
+
+void testMaxPath() {
+  struct node *tree = NULL;
+  int array[] = {0,  1,  100,  3,  4, 5, 70};
+  tree = insertFromArray(tree, array, 7);
+  printf("max path: %d \n ", calculateMaxTreePath(tree));
+  
+  printf("Tree print: ");
+  fancyPrint(tree, 1);
+}
+
+int main() {
+
+  testRemove();
 
   return 0;
 }
