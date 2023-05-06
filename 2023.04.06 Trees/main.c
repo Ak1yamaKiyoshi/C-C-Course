@@ -123,6 +123,29 @@ nnode *nFindByValue(nnode *tree, int value) {
   return NULL;
 }
 
+
+nnode *find(nnode *root, int* value, int ptrnode, char bitset)
+{ 
+  if (!(bitset | NOTHING_TO_SEARCH)) return NULL;
+  if (bitset & USE_DEPTH) ;
+  if (bitset & DEPPEST) ;
+  if (bitset & LEFT_RIGHT) ;
+  if (bitset & USE_CHILD_NODE) ;
+  if (bitset & WITHOUT_CHILD) ;
+  if (bitset & WITH_CHILD) ;
+  
+  return NULL;
+}
+
+nnode* find(nnode *root, int value)
+{
+    if (!root) return root;
+    if (root->value == value) return root;
+    nnode *result = find(root->left, value);
+    if (!result) result = find(root->right, value);
+    return result;
+}
+
 /* 
 const char NOTHING_TO_SEARCH = 0x0; // 0b00000000 
 const char USE_VALUE = 0x1;         // 0b00000001 (1 - use, 0 - do not use) 
