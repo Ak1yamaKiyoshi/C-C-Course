@@ -1,8 +1,9 @@
-#include <malloc.h>
+#include "./Functions/node.c"
+#include "./Functions/remove.c"
+#include "./Functions/print.c"
 #include <stdio.h>
-#include <strings.h>
-#include "node.c" // Node structure 
-#include "tree.c" // Tree functions 
+#ifndef __test_remove_c__
+#define __test_remove_c__
 
 
 void testRemove() {
@@ -11,14 +12,16 @@ nnode *tree = NULL;
   tree = nInsertArray(tree, array, 6); 
 
   // two child case
-nRemoveByValueremoveLast(tree, 3); 
+nRemoveByValue(tree, 3); 
   // one child case
-nRemoveByValueremoveLast(tree, 4);
+nRemoveByValue(tree, 4);
   // terminal node case 
-nRemoveByValueremoveLast(tree, 5);
+nRemoveByValue(tree, 5);
   // root case 
-nRemoveByValueremoveLast(tree, 1);
+nRemoveByValue(tree, 1);
 
   printf("Tree print: ");
   nFancyPrint(tree, 1);
 }
+
+#endif

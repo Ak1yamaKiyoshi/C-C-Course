@@ -104,66 +104,6 @@ nnode *nInsertArray(nnode *tree, int *array, int len) {
   return tree;
 }
 
-/*
- * search node in tree BY VALUE using post order traverse
- * @param tree tree to search value in
- * @param value value to search in list
- * @return node with given value or NULL
- */
-nnode *nFindByValue(nnode *tree, int value) {
-  if (tree != NULL) {
-    /* seach node in left subtree */
-    nnode *buffer = nFindByValue(tree->left, value);
-
-    /* if node found in previous call, return it */
-    if (buffer != NULL && buffer->value == value)
-      return buffer;
-
-    /* seach node in right subtree */
-    buffer = nFindByValue(tree->right, value);
-
-    /* if node found in previous call, return it */
-    if (buffer != NULL && buffer->value == value)
-      return buffer;
-
-    /* found node with right value */ 
-    if (tree->value == value) return tree;
-  
-    /* node not found */
-    else return NULL;
-  }
-  return NULL;
-}
-
-
-// nnode * find(nnode *root, int *value, nnode ptrnode, char bitset)
-// { 
-//   
-//   
-//   if (bitset & DEPPEST) ;
-//   if (bitset & LEFT_RIGHT) ;
-//   if (bitset & USE_CHILD_NODE) ;
-//   if (bitset & WITHOUT_CHILD) ;
-//   if (bitset & WITH_CHILD) ;
-//   
-//   if (!root) return root;
-//   if (!(bitset | NOTHING_TO_SEARCH)) return NULL;
-// 
-//   
-//   if ( bitset & USE_VALUE && root->value == value) return root;
-//   nnode *result = find(root->left, value, ptrnode, bitset);
-//   
-//   //if ((bitset & USE_DEPTH)) return result; 
-//   if (!result) result = find(root->right, value, ptrnode, bitset);
-//   //if (!(bitset & USE_DEPTH)) return result;
-// 
-// }
-
-/*
- * find node with minimal value in tree
- * @param tree to search in
- * @return minNode node with min value
- */
 nnode *min(nnode *tree) {
   if (tree != NULL) {
 
@@ -321,15 +261,15 @@ DFS З корня до нащадків:
             -> Перевірити, чи сума == 0, ( якщо так, то ми знайшли потрібний шлях ) 
       -> Інакше викликати DFS на лівий та правий нащадок
 */
-int *nCalculateTreePath(nnode* tree, int sum) {
-  sum -= tree->value;
-  if (tree->left == NULL && tree->right == NULL && sum == 0) return path;
-  else if (sum != 0) { free(path); return NULL; }
-  else {
-    nCalculateMaxTreePath(tree->right, sum, path, index+1);
-    nCalculateMaxTreePath(tree->left, sum, path, index+1);
-  }
-}
+//int *nCalculateTreePath(nnode* tree, int sum) {
+//  sum -= tree->value;
+//  if (tree->left == NULL && tree->right == NULL && sum == 0) return path;
+//  else if (sum != 0) { free(path); return NULL; }
+//  else {
+//    nCalculateMaxTreePath(tree->right, sum, path, index+1);
+//    nCalculateMaxTreePath(tree->left, sum, path, index+1);
+//  }
+//}
 
 /*
  * * * Algorythm * * * 
