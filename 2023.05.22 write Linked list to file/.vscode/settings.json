@@ -1,0 +1,7 @@
+{
+    "files.associations": {
+        "singlelinkedlist.h": "c",
+        "malloc.h": "c",
+        "stdio.h": "c"
+    }
+}

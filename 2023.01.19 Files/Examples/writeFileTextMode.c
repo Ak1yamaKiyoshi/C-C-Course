@@ -2,15 +2,9 @@
 
 int main()
 {
-    FILE* file = fopen("data.txt", "wt");
+    FILE* file = fopen("data.csv", "at");
     if (file != NULL) {
-        fprintf(file, "%s\n", "Test message");
-        fclose(file);
-    }
-
-    file = fopen("data.txt", "at");
-    if (file) {
-        fputs("and one more message", file);
+        fprintf(file, "%d;", 3);
         fclose(file);
     }
 

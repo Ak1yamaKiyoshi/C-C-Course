@@ -2,7 +2,6 @@
 #include <malloc.h>
 #include <time.h>
 #include <stdlib.h>
-#define _USE_MATH_DEFINES
 #include <math.h>
 
 const int RANGEMIN = 0;
