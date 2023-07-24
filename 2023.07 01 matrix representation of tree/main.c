@@ -25,47 +25,47 @@ char** setZero (char **matrix, int size) {
 	return matrix;
 }
 
-char **setTreeMatrix(char**matrix, char loop, int matrixVar) {
-	if (matrixVar == 0) {
+char **setTreeMatrix(char**matrix){
+    // char loop, int matrixVar) {
+	//if (matrixVar == 0) {
 		matrix[0][1] = 1;
 		matrix[1][0] = 1;
 		matrix[0][2] = 1;
 		matrix[2][0] = 1;
 		matrix[2][3] = 1;
 		matrix[3][2] = 1;
-	} else if (matrixVar == 1) {
-		matrix[0][1] = 1;
-		matrix[1][0] = 1;
-		matrix[1][2] = 1;
-		matrix[2][1] = 1;
-		matrix[2][3] = 1;
-		matrix[3][2] = 1;
-	} else if (matrixVar == 2) {
-		matrix[0][1] = 1;
-		matrix[1][0] = 1;
-		matrix[0][2] = 1;
-		matrix[2][0] = 1;
-		matrix[1][3] = 1;
-		matrix[3][1] = 1;
-	}
+	//} else if (matrixVar == 1) {
+	//	matrix[0][1] = 1;
+	//	matrix[1][0] = 1;
+	//	matrix[1][2] = 1;
+	//	matrix[2][1] = 1;
+	//	matrix[2][3] = 1;
+	//	matrix[3][2] = 1;
+	//} else if (matrixVar == 2) {
+	//	matrix[0][1] = 1;
+	//	matrix[1][0] = 1;
+	//	matrix[0][2] = 1;
+	//	matrix[2][0] = 1;
+	//	matrix[1][3] = 1;
+	//	matrix[3][1] = 1;
+	//}
 	
 	// create loop
-	if (loop == 1 && matrixVar == 0) {
-		matrix[1][3] = 1;
-		matrix[3][1] = 1;
-	} else if (loop == 2 && matrixVar == 0) {
-		matrix[0][3] = 1;
-		matrix[3][0] = 1;
-	} else if (matrixVar == 1 && loop == 1) {
-		matrix[3][0] = 1;
-		matrix[0][3] = 1;
-	}
-	
+	//if (loop == 1 && matrixVar == 0) {
+	//	matrix[1][3] = 1;
+	//	matrix[3][1] = 1;
+	//} else if (loop == 2 && matrixVar == 0) {
+	//	matrix[0][3] = 1;
+	//	matrix[3][0] = 1;
+	//} else if (matrixVar == 1 && loop == 1) {
+	//	matrix[3][0] = 1;
+	//	matrix[0][3] = 1;
+	//}
 	return matrix;
 }
 
 int height(char**matrix, int size, int cur, int prev, int depth, int maxdepth) {
-	printf("\nheight:  <cur:%d prev:%d depth:%d >  ", cur, prev, depth);
+	//printf("\nheight:  <cur:%d prev:%d depth:%d >  ", cur, prev, depth);
 	int origindepth = depth;
 	int tempdepth = depth;
 	for (int i = 0; i < size; i++) {
@@ -79,8 +79,7 @@ int height(char**matrix, int size, int cur, int prev, int depth, int maxdepth) {
 			? tempdepth 
 			: depth;
 		} 
-	}
-	
+	}	
 	return depth;
 }
 
@@ -89,9 +88,9 @@ int main() {
 	int nodes = 4;
 	char **matrix = createMatrix(4);
 	printMatrix(matrix, nodes, "empty matrix");
-	printMatrix(setTreeMatrix(matrix, 2, 0), nodes, "set matrix");
+	printMatrix(setTreeMatrix(matrix), nodes, "set matrix");
 	//printMatrix(setZero(matrix, nodes), nodes, "empty matrix");
-	printf("\nheight: %d", 
+	printf("\nheight: %d\n", 
 		height(matrix, nodes, 0, 0, 0, nodes)
 	);
 
