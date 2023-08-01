@@ -3,6 +3,83 @@
 #include <malloc.h>
 #include <memory.h>
 
+
+
+struct Car {
+	char brand[20];
+	char model[20];
+	int  year;
+	int  fuelTank_l;
+	int  engine_horsePowers;
+	int  engineFuelConsumption;
+	int  dryMass;
+	char engineType[20];
+	int  passangerCapacity;
+};
+
+
+void setCarBrand(struct Car *car, char *brand){
+	memcpy(car->brand, brand, 20);
+}
+
+void setCarModel(struct Car *car, char *model){
+	memcpy(car->model, model, 20);
+}
+
+void setCarEngineType(struct Car *car, char *type){
+	memcpy(car->engineType, type, 20);
+}
+
+void setCarYear(struct Car *car, int year) {
+	car->year = year;
+}
+
+void setCarFuelTank(struct Car *car, int fuelTank_l) {
+	car->fuelTank_l = fuelTank_l;
+}
+
+void setCarEngine_hp(struct Car *car,  int engine_horsePowers) {
+	car->engine_horsePowers = engine_horsePowers;
+}
+
+void setCarEngine_fuelConsumption(struct Car *car,  int consuption) {
+	car->engineFuelConsumption = consuption;
+}
+
+void setCarDryMass(struct Car *car,  int dryMass) {
+	car->dryMass = dryMass;
+}
+
+void setCarMaxPassangers(struct Car *car,  int passangers) {
+	car->passangerCapacity = passangers;
+}
+
+int calculateMaxSpeed(struct Car *car) {
+	return car->engine_horsePowers / (car->dryMass + (car->fuelTank_l / 4)) * 100;
+}
+
+void printCar() { 
+
+}
+
+int main() {
+	struct Car *car;
+
+	setCarBrand(car, "Nissan");
+	setCarModel(car, "Centry");
+	setCarEngineType(car, "gas");
+	setCarYear(car, 2001);
+	setCarFuelTank(car, 60);
+	setCarEngine_hp(car,  230);
+	setCarEngine_fuelConsumption(car, 6.7);
+	setCarDryMass(car,  1200);
+	setCarMaxPassangers(car, 4);
+
+		
+}
+
+
+/*
 struct Automobile {
 	char brand[20];
 	char model[20];
@@ -96,6 +173,12 @@ void enterisDieselDriven(struct Automobile *car){
 	scanf("%d", &car->isDieselDriven);
 }
 
+int maxDistanceToTravel(struct Automobile *car){
+    
+	return car->fuelTankCapacity * (car->weight / car->maxSpeed);
+	
+}
+
 void enterCar(struct Automobile *car) {
 	printf("\nenter car\n");
 	enterBrand(car);
@@ -137,9 +220,19 @@ int main() {
 	setisDieselDriven(car, -1);
 	printCar(car);
 
-	printf(":");
+	printf(" Enter car: ");
 	enterCar(car);
 	printCar(car);
 	
 	return 0;
 }
+
+*/
+
+
+
+
+
+
+
+
